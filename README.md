@@ -63,6 +63,10 @@ After a successful build, release artifacts are written to:
 
 To publish a binary release, attach the generated `.AppImage` file from `release/` to your GitHub Release.
 
+For repeatable CI builds, this fork includes `.github/workflows/release-appimage.yml`:
+- `workflow_dispatch`: manually build and upload a `pikachu-volleyball-appimage` workflow artifact.
+- `release.published`: build the AppImage and automatically attach it to the published GitHub Release.
+
 ## Quality-check baseline
 
 This fork now includes a small, reproducible quality-check baseline that matches the current web-first project and Linux/AppImage flow.
