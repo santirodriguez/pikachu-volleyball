@@ -58,7 +58,7 @@ npm run build:appimage
 
 After a successful build, release artifacts are written to:
 
-- `release/pikachu-volleyball-<version>-<arch>.AppImage` (ready-to-use Linux binary)
+- `release/Pikachu-Volleyball-1.1x86_64.AppImage` (ready-to-use Linux binary for the first public release)
 - `release/latest-linux.yml` (electron-builder update metadata)
 
 To publish a binary release, attach the generated `.AppImage` file from `release/` to your GitHub Release.
