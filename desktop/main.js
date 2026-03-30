@@ -3,6 +3,7 @@ const { app, BrowserWindow } = require('electron');
 
 function createMainWindow() {
   const mainWindow = new BrowserWindow({
+    title: 'Pikachu Volleyball',
     width: 1024,
     height: 768,
     minWidth: 800,
@@ -15,7 +16,12 @@ function createMainWindow() {
     },
   });
 
-  mainWindow.loadFile(path.join(__dirname, '..', 'dist', 'en', 'index.html'));
+  mainWindow.loadFile(path.join(__dirname, '..', 'dist', 'en', 'index.html'), {
+    query: { desktop: '1' },
+  });
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.setTitle('Pikachu Volleyball');
+  });
 }
 
 app.whenReady().then(() => {

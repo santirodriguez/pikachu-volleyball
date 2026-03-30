@@ -261,6 +261,9 @@ span.check {
   z-index: 5;
   pointer-events: none;
 }
+#quick-rematch-hint.hidden {
+  display: none;
+}
 .fade-in-box {
   position: absolute;
   display: flex;

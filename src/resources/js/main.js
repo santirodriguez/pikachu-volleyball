@@ -136,6 +136,11 @@ function setUpInitialUI() {
   };
   aboutBtn.addEventListener('click', closeAboutBox);
   closeAboutBtn.addEventListener('click', closeAboutBox);
+
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('desktop') === '1') {
+    closeAboutBox();
+  }
 }
 
 /**
