@@ -1,10 +1,11 @@
 # Pikachu Volleyball
 
-_&check;_ _English_ | [_Korean(한국어)_](README.ko.md)
+✓ English | Español | Korean(한국어)
 
-Pikachu Volleyball (対戦ぴかちゅ～　ﾋﾞｰﾁﾊﾞﾚｰ編) is an old Windows game that was developed by "(C) SACHI SOFT / SAWAYAKAN Programmers" and "(C) Satoshi Takenouchi" in 1997. The source code on this repository was obtained by reverse engineering the core parts of the machine code &mdash; including the physics engine and the AI &mdash; of the original game and reimplementing them in JavaScript.
+Pikachu Volleyball (対戦ぴかちゅ～　ﾋﾞｰﾁﾊﾞﾚｰ編) is an old Windows game that was developed by "(C) SACHI SOFT / SAWAYAKAN Programmers" and "(C) Satoshi Takenouchi" in 1997.
 
-You can play this game on the website: https://gorisanson.github.io/pikachu-volleyball/en/
+This repository is a fork of the JavaScript reimplementation created by https://github.com/gorisanson/pikachu-volleyball.
+This fork keeps that work as its foundation, while focusing on a version I can enjoy natively on Linux without relying on Wine. A big part of the motivation is simple childhood nostalgia, together with the desire to personalize the project carefully and improve it step by step while still maintaining the web version.
 
 <img src="src/resources/assets/images/screenshot.png" alt="Pikachu Volleyball game screenshot" width="648">
 
@@ -12,75 +13,60 @@ You can play this game on the website: https://gorisanson.github.io/pikachu-voll
 
 1. Clone this repository and get into the directory.
 
-```sh
-git clone https://github.com/gorisanson/pikachu-volleyball.git
+git clone https://github.com/santirodriguez/pikachu-volleyball.git
 cd pikachu-volleyball
-```
 
-2. Install dependencies. (If errors occur, you can try with `node v16` and `npm v8`.)
+2. Install dependencies. (If errors occur, you can try with node v16 and npm v8.)
 
-```sh
 npm install
-```
 
 3. Bundle the code.
 
-```sh
 npm run build
-```
 
 4. Run a local web server.
 
-```sh
 npx http-server dist
-```
 
-5. Connect to the local web server on a web browser. (In most cases, the URL for connecting to the server would be `http://localhost:8080`. For the exact URL, it is supposed to be found on the printed messages on your terminal.)
-
+5. Open the game in your browser. In most cases, the URL will be http://localhost:8080.
 
 ## Linux desktop packaging (AppImage)
 
-This repository now includes a minimal Electron wrapper under `desktop/` and uses `electron-builder` for Linux packaging.
+This repository includes a minimal Electron wrapper under desktop/ and uses electron-builder for Linux packaging.
 
-1. Build the web assets that Electron loads from `dist/`.
+1. Build the web assets:
 
-```sh
 npm run build:web
-```
 
-2. Start the desktop app locally.
+2. Start the desktop app:
 
-```sh
 npm run start:desktop
-```
 
-3. Build Linux AppImage artifacts.
+3. Build the AppImage:
 
-```sh
 npm run build:desktop:linux
-```
 
 The Linux packaging target is restricted to AppImage only.
 
 ## Game structure
 
-- Physics Engine: The physics engine, which calculates the position of the ball and the players (Pikachus), is contained in the file [`src/resources/js/physics.js`](src/resources/js/physics.js). (This file also containes the AI which determines the keyboard input of the computer when you are playing against your computer.) This source code file is gained by reverse engineering the function at the address 00403dd0 of the machine code of the original game.
+- Physics Engine: src/resources/js/physics.js
+- Rendering: PixiJS (https://github.com/pixijs/pixi.js)
 
-- Rendering: [PixiJS](https://github.com/pixijs/pixi.js) library is used for rendering the game.
+Refer to src/resources/js/main.js for more details.
 
-Refer comments on [`src/resources/js/main.js`](src/resources/js/main.js) for other details.
+## About this fork
 
-## Methods used for reverse engineering
+This fork focuses on:
 
-The main tools used for reverse engineering are following.
+- keeping the game working on the web
+- adding native Linux support via AppImage
+- introducing careful improvements without breaking the original experience
 
-- [Ghidra](https://ghidra-sre.org/)
-- [Cheat Engine](https://www.cheatengine.org/)
-- [OllyDbg](http://www.ollydbg.de/)
-- [Resource Hacker](http://www.angusj.com/resourcehacker/)
-
-[Ghidra](https://ghidra-sre.org/) is used for decompiling the machine code to C code. At first look, the decompiled C code looked incomprehensible. One of the reason was that the variable names (`iVar1`, `iVar2`, ...) and function names (`FUN_00402dc0`, `FUN_00403070`, ...) in the decompiled C code are meaningless. But, with the aid of [Cheat Engine](https://www.cheatengine.org/), I could find the location of some significant variables &mdash; x, y coordinate of the ball and the players. And reading from the location of the variables, the decompiled C code was comprehensible! [OllyDbg](http://www.ollydbg.de/) was used for altering a specific part of the machine code. For example, to make slower version of the game so that it would be easier to count the number of frames of "Ready?" message on the start of new round in the game. [Resource Hacker](http://www.angusj.com/resourcehacker/) was used for extract the assets (sprites and sounds) of the game.
+The main motivation is to play this game natively on Linux without Wine, while preserving the nostalgia of the original and gradually enhancing the project.
 
 ## An intended deviation from the original game
 
-If there is no keyboard input, AI vs AI match is started after a while. In the original game, the match lasts only for about 40 seconds. But in this JavaScript version, there's no time limit to the AI vs AI match so you can watch it as long as you want.
+If there is no keyboard input, AI vs AI match starts automatically.
+
+Unlike the original game, there is no time limit, so matches can run indefinitely.
