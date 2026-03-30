@@ -28,6 +28,25 @@ jobs:
       - name: Build Linux AppImage
         run: npm run build:desktop:linux -- --publish=never
 
+      - name: Report AppImage artifact size
+        run: |
+          set -euo pipefail
+          appimage_path="$(find release -maxdepth 1 -type f -name '*.AppImage' | head -n 1)"
+          appimage_name="$(basename "$appimage_path")"
+          appimage_bytes="$(stat -c%s "$appimage_path")"
+          appimage_mib="$(awk -v bytes="$appimage_bytes" 'BEGIN { printf "%.2f", bytes / 1024 / 1024 }')"
+
+          echo "Built artifact: $appimage_name"
+          echo "Artifact size: $appimage_bytes bytes (${appimage_mib} MiB)"
+          ls -lh release/*.AppImage
+
+          {
+            echo "## AppImage size report"
+            echo ""
+            echo "- Artifact: \`$appimage_name\`"
+            echo "- Size: \`$appimage_bytes\` bytes (\`${appimage_mib}\` MiB)"
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Upload AppImage workflow artifact
         uses: actions/upload-artifact@v5
         with:
