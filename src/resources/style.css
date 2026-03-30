@@ -246,6 +246,21 @@ span.check {
 #game-canvas.graphic-soft {
   image-rendering: auto;
 }
+#quick-rematch-hint {
+  position: absolute;
+  left: 50%;
+  bottom: calc(2.4 * var(--font-size));
+  transform: translateX(-50%);
+  width: calc(var(--canvas-width) - 1.2 * var(--font-size));
+  padding: calc(0.25 * var(--font-size)) calc(0.5 * var(--font-size));
+  text-align: center;
+  font-size: calc(0.88 * var(--font-size));
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.55);
+  border-radius: 4px;
+  z-index: 5;
+  pointer-events: none;
+}
 .fade-in-box {
   position: absolute;
   display: flex;
