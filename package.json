@@ -9,6 +9,7 @@
     "build": "npm run build:web",
     "build:web": "webpack --config webpack.prod.js",
     "start:desktop": "npm run build:web && electron .",
+    "build:appimage": "npm run build:desktop:linux",
     "build:desktop:linux": "npm run build:web && electron-builder --linux AppImage",
     "lint": "node ./node_modules/eslint/bin/eslint.js \"src/resources/js/**/*.js\" \"desktop/**/*.js\" \"webpack.*.js\"",
     "quality:check": "npm run lint && npm run build:web"
@@ -62,6 +63,7 @@
   "build": {
     "appId": "io.github.gorisanson.pikachu-volleyball",
     "productName": "Pikachu Volleyball",
+    "artifactName": "pikachu-volleyball-${version}-${arch}.${ext}",
     "directories": {
       "output": "release"
     },
