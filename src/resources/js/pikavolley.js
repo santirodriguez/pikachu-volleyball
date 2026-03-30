@@ -111,6 +111,7 @@ export class PikachuVolleyball {
      * @type {GameState}
      */
     this.state = this.intro;
+    this.setQuickRematchHintVisibility(false);
   }
 
   /**
@@ -178,6 +179,7 @@ export class PikachuVolleyball {
       this.view.fadeInOut.setBlackAlphaTo(0);
       this.selectedWithWho = 0;
       this.view.menu.selectWithWho(this.selectedWithWho);
+      this.setQuickRematchHintVisibility(false);
     }
     this.view.menu.drawFightMessage(this.frameCounter);
     this.view.menu.drawSachisoft(this.frameCounter);
@@ -306,6 +308,7 @@ export class PikachuVolleyball {
 
       this.view.fadeInOut.setBlackAlphaTo(1); // set black screen
       this.audio.sounds.bgm.play();
+      this.setQuickRematchHintVisibility(false);
     }
 
     this.view.game.drawGameStartMessage(
@@ -354,6 +357,7 @@ export class PikachuVolleyball {
     if (this.gameEnded === true) {
       this.view.game.drawGameEndMessage(this.frameCounter);
       this.frameCounter++;
+      this.setQuickRematchHintVisibility(this.frameCounter >= 70);
       if (this.frameCounter >= 70 && pressedPowerHit) {
         this.startQuickRematch();
         return;
@@ -361,6 +365,7 @@ export class PikachuVolleyball {
       if (this.frameCounter >= this.frameTotal.gameEnd) {
         this.frameCounter = 0;
         this.view.game.visible = false;
+        this.setQuickRematchHintVisibility(false);
         this.state = this.intro;
       }
       return;
@@ -465,7 +470,25 @@ export class PikachuVolleyball {
     this.slowMotionFramesLeft = 0;
     this.slowMotionNumOfSkippedFrames = 0;
     this.view.game.visible = false;
+    this.setQuickRematchHintVisibility(false);
     this.state = this.startOfNewGame;
+  }
+
+
+  /**
+   * Show or hide the quick rematch hint on the game screen
+   * @param {boolean} visible
+   */
+  setQuickRematchHintVisibility(visible) {
+    const quickRematchHint = document.getElementById('quick-rematch-hint');
+    if (quickRematchHint === null) {
+      return;
+    }
+    if (visible) {
+      quickRematchHint.classList.remove('hidden');
+    } else {
+      quickRematchHint.classList.add('hidden');
+    }
   }
 
   /**
