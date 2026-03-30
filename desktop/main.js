@@ -154,6 +154,8 @@ function createMainWindow() {
     minWidth: 800,
     minHeight: 600,
     autoHideMenuBar: false,
+    backgroundColor: '#101010',
+    show: false,
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
@@ -169,6 +171,13 @@ function createMainWindow() {
     }
     mainWindow.setTitle(APP_NAME);
     buildAppMenu();
+  });
+
+  mainWindow.once('ready-to-show', () => {
+    if (!mainWindow || mainWindow.isDestroyed()) {
+      return;
+    }
+    mainWindow.show();
   });
 
   mainWindow.on('closed', () => {

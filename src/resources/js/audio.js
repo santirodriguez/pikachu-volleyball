@@ -7,29 +7,24 @@ import { ASSETS_PATH } from './assets_path.js';
 
 const SOUNDS = ASSETS_PATH.SOUNDS;
 
-/** @typedef {import('@pixi/loaders').LoaderResource} LoaderResource */
-
 /**
  * Class representing audio
  */
 export class PikaAudio {
   /**
    * Create a PikaAudio object
-   * @param {Object.<string,LoaderResource>} resources loader.resources
    */
-  constructor(resources) {
+  constructor() {
     /** @type {Object.<string,PikaStereoSound>} sounds pack */
     this.sounds = {
-      bgm: new PikaStereoSound(resources[SOUNDS.BGM].sound),
-      pipikachu: new PikaStereoSound(resources[SOUNDS.PIPIKACHU].sound),
-      pika: new PikaStereoSound(resources[SOUNDS.PIKA].sound),
-      chu: new PikaStereoSound(resources[SOUNDS.CHU].sound),
-      pi: new PikaStereoSound(resources[SOUNDS.PI].sound),
-      pikachu: new PikaStereoSound(resources[SOUNDS.PIKACHU].sound),
-      powerHit: new PikaStereoSound(resources[SOUNDS.POWERHIT].sound),
-      ballTouchesGround: new PikaStereoSound(
-        resources[SOUNDS.BALLTOUCHESGROUND].sound
-      ),
+      bgm: new PikaStereoSound(SOUNDS.BGM),
+      pipikachu: new PikaStereoSound(SOUNDS.PIPIKACHU),
+      pika: new PikaStereoSound(SOUNDS.PIKA),
+      chu: new PikaStereoSound(SOUNDS.CHU),
+      pi: new PikaStereoSound(SOUNDS.PI),
+      pikachu: new PikaStereoSound(SOUNDS.PIKACHU),
+      powerHit: new PikaStereoSound(SOUNDS.POWERHIT),
+      ballTouchesGround: new PikaStereoSound(SOUNDS.BALLTOUCHESGROUND),
     };
 
     this.sounds.bgm.loop = true;
@@ -100,12 +95,12 @@ export class PikaAudio {
 class PikaStereoSound {
   /**
    * create a PikaStereoSound object
-   * @param {Sound} sound
+   * @param {string} soundURL
    */
-  constructor(sound) {
-    this.center = sound;
-    this.left = Sound.from(sound.url);
-    this.right = Sound.from(sound.url);
+  constructor(soundURL) {
+    this.center = Sound.from(soundURL);
+    this.left = Sound.from(soundURL);
+    this.right = Sound.from(soundURL);
 
     const centerPanning = new filters.StereoFilter(0);
     const leftPanning = new filters.StereoFilter(-0.75);

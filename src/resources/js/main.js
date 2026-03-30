@@ -84,9 +84,6 @@ document.getElementById('game-canvas-container').appendChild(renderer.view);
 renderer.render(stage); // To make the initial canvas painting stable in the Firefox browser.
 
 loader.add(ASSETS_PATH.SPRITE_SHEET);
-for (const prop in ASSETS_PATH.SOUNDS) {
-  loader.add(ASSETS_PATH.SOUNDS[prop]);
-}
 
 setUpInitialUI();
 
@@ -123,7 +120,27 @@ function setUpInitialUI() {
 function setup() {
   const pikaVolley = new PikachuVolleyball(stage, loader.resources);
   setUpUI(pikaVolley, ticker);
+  warmUpAudioAssets();
   start(pikaVolley);
+}
+
+/**
+ * Start non-critical audio loading after the game becomes interactive.
+ * This improves startup responsiveness, especially in desktop mode.
+ */
+function warmUpAudioAssets() {
+  const idleCallback =
+    window.requestIdleCallback ||
+    ((callback) => {
+      window.setTimeout(callback, 300);
+    });
+  idleCallback(() => {
+    for (const prop in ASSETS_PATH.SOUNDS) {
+      const audio = new Audio(ASSETS_PATH.SOUNDS[prop]);
+      audio.preload = 'auto';
+      audio.load();
+    }
+  });
 }
 
 /**
