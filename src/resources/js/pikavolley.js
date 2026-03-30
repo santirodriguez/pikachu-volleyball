@@ -354,10 +354,11 @@ export class PikachuVolleyball {
     if (this.gameEnded === true) {
       this.view.game.drawGameEndMessage(this.frameCounter);
       this.frameCounter++;
-      if (
-        this.frameCounter >= this.frameTotal.gameEnd ||
-        (this.frameCounter >= 70 && pressedPowerHit)
-      ) {
+      if (this.frameCounter >= 70 && pressedPowerHit) {
+        this.startQuickRematch();
+        return;
+      }
+      if (this.frameCounter >= this.frameTotal.gameEnd) {
         this.frameCounter = 0;
         this.view.game.visible = false;
         this.state = this.intro;
@@ -451,6 +452,20 @@ export class PikachuVolleyball {
       this.roundEnded = false;
       this.state = this.round;
     }
+  }
+
+  /**
+   * Start a fresh match immediately using current players and settings
+   */
+  startQuickRematch() {
+    this.frameCounter = 0;
+    this.roundEnded = false;
+    this.gameEnded = false;
+    this.isPlayer2Serve = false;
+    this.slowMotionFramesLeft = 0;
+    this.slowMotionNumOfSkippedFrames = 0;
+    this.view.game.visible = false;
+    this.state = this.startOfNewGame;
   }
 
   /**
