@@ -26,7 +26,7 @@ jobs:
         run: npm ci
 
       - name: Build Linux AppImage
-        run: npm run build:appimage
+        run: npm run build:desktop:linux -- --publish=never
 
       - name: Upload AppImage workflow artifact
         uses: actions/upload-artifact@v5
