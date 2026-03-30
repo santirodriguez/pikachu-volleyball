@@ -37,6 +37,31 @@ npx http-server dist
 
 5. Connect to the local web server on a web browser. (In most cases, the URL for connecting to the server would be `http://localhost:8080`. For the exact URL, it is supposed to be found on the printed messages on your terminal.)
 
+
+## Linux desktop packaging (AppImage)
+
+This repository now includes a minimal Electron wrapper under `desktop/` and uses `electron-builder` for Linux packaging.
+
+1. Build the web assets that Electron loads from `dist/`.
+
+```sh
+npm run build:web
+```
+
+2. Start the desktop app locally.
+
+```sh
+npm run start:desktop
+```
+
+3. Build Linux AppImage artifacts.
+
+```sh
+npm run build:desktop:linux
+```
+
+The Linux packaging target is restricted to AppImage only.
+
 ## Game structure
 
 - Physics Engine: The physics engine, which calculates the position of the ball and the players (Pikachus), is contained in the file [`src/resources/js/physics.js`](src/resources/js/physics.js). (This file also containes the AI which determines the keyboard input of the computer when you are playing against your computer.) This source code file is gained by reverse engineering the function at the address 00403dd0 of the machine code of the original game.

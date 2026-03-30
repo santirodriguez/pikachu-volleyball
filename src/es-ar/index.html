@@ -453,7 +453,7 @@
         notificationBox.classList.remove('hidden');
       }
 
-      if ('serviceWorker' in navigator) {
+      if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
         const wb = new Workbox('../sw.js');
         // Add an event listener to detect when the registered
         // service worker has installed but is waiting to activate.
