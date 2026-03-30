@@ -6,7 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack serve --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js"
+    "build": "npm run build:web",
+    "build:web": "webpack --config webpack.prod.js",
+    "start:desktop": "npm run build:web && electron .",
+    "build:desktop:linux": "npm run build:web && electron-builder --linux AppImage"
   },
   "repository": {
     "type": "git",
@@ -32,7 +35,9 @@
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.9.1",
     "webpack-merge": "^5.8.0",
-    "workbox-webpack-plugin": "^6.5.3"
+    "workbox-webpack-plugin": "^6.5.3",
+    "electron": "^35.1.5",
+    "electron-builder": "^26.0.12"
   },
   "dependencies": {
     "@pixi/canvas-display": "^6.4.2",
@@ -50,5 +55,25 @@
     "@pixi/sprite-animated": "^6.4.2",
     "@pixi/spritesheet": "^6.4.2",
     "@pixi/ticker": "^6.4.2"
+  },
+  "main": "desktop/main.js",
+  "build": {
+    "appId": "io.github.gorisanson.pikachu-volleyball",
+    "productName": "Pikachu Volleyball",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "desktop/**/*",
+      "package.json"
+    ],
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Game",
+      "icon": "src/resources/assets/images/IDI_PIKAICON-1_gap_filled_512.png"
+    }
   }
 }
