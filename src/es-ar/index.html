@@ -27,6 +27,13 @@
       href="../resources/assets/images/IDI_PIKAICON-0.png"
     />
     <link rel="stylesheet" href="../resources/style.css" />
+    <script>
+      const pvDesktopMode =
+        new URLSearchParams(window.location.search).get('desktop') === '1';
+      if (pvDesktopMode) {
+        document.documentElement.classList.add('desktop-mode');
+      }
+    </script>
   </head>
   <body>
     <div id="flex-container">
@@ -245,9 +252,7 @@
             </p>
             <p class="reverse-engineered-by">
               Este proyecto se basa en el trabajo de reimplementación en JavaScript e ingeniería inversa publicado por<br />
-              <span class="no-wrap"
-                ><a href="https://gorisanson.github.io/">Kyutae Lee</a></span
-              >
+              <span class="no-wrap">Kyutae Lee</span>
             </p>
             <p class="source-code-on">
               Código fuente de este fork:
@@ -425,6 +430,8 @@
           });
 
           wb.register();
+        }).catch((error) => {
+          console.warn('Service worker update check is unavailable.', error);
         });
       }
     </script>

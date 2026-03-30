@@ -27,6 +27,13 @@
       href="../resources/assets/images/IDI_PIKAICON-0.png"
     />
     <link rel="stylesheet" href="../resources/style.css" />
+    <script>
+      const pvDesktopMode =
+        new URLSearchParams(window.location.search).get('desktop') === '1';
+      if (pvDesktopMode) {
+        document.documentElement.classList.add('desktop-mode');
+      }
+    </script>
   </head>
   <body>
     <div id="flex-container">
@@ -244,9 +251,7 @@
             <p class="reverse-engineered-by">
               이 프로젝트는 원작을 바탕으로 한 JavaScript 리버스 엔지니어링/재구현 작업을 기반으로 합니다.<br />
               작업 공개:
-              <span class="no-wrap"
-                ><a href="https://gorisanson.github.io/">이규태</a></span
-              >
+              <span class="no-wrap">이규태</span>
             </p>
             <p class="source-code-on">
               이 포크의 소스 코드:
@@ -423,6 +428,8 @@
           });
 
           wb.register();
+        }).catch((error) => {
+          console.warn('Service worker update check is unavailable.', error);
         });
       }
     </script>
