@@ -64,11 +64,13 @@
     "appId": "io.github.gorisanson.pikachu-volleyball",
     "productName": "Pikachu Volleyball",
     "artifactName": "pikachu-volleyball-${version}-${arch}.${ext}",
+    "compression": "maximum",
     "directories": {
       "output": "release"
     },
     "files": [
       "dist/**/*",
+      "!dist/**/*.map",
       "desktop/**/*",
       "package.json"
     ],
