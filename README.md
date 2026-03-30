@@ -48,6 +48,21 @@ npm run build:desktop:linux
 
 The Linux packaging target is restricted to AppImage only.
 
+### AppImage release artifact details
+
+For convenience, you can also run:
+
+```bash
+npm run build:appimage
+```
+
+After a successful build, release artifacts are written to:
+
+- `release/pikachu-volleyball-<version>-<arch>.AppImage` (ready-to-use Linux binary)
+- `release/latest-linux.yml` (electron-builder update metadata)
+
+To publish a binary release, attach the generated `.AppImage` file from `release/` to your GitHub Release.
+
 ## Quality-check baseline
 
 This fork now includes a small, reproducible quality-check baseline that matches the current web-first project and Linux/AppImage flow.
