@@ -48,7 +48,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload AppImage workflow artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: pikachu-volleyball-appimage
           path: release/*.AppImage
