@@ -4,12 +4,14 @@
   "description": "Pikachu Volleyball implemented into JavaScript by reverse engineering the original game",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run quality:check",
     "start": "webpack serve --config webpack.dev.js",
     "build": "npm run build:web",
     "build:web": "webpack --config webpack.prod.js",
     "start:desktop": "npm run build:web && electron .",
-    "build:desktop:linux": "npm run build:web && electron-builder --linux AppImage"
+    "build:desktop:linux": "npm run build:web && electron-builder --linux AppImage",
+    "lint": "node ./node_modules/eslint/bin/eslint.js \"src/resources/js/**/*.js\" \"desktop/**/*.js\" \"webpack.*.js\"",
+    "quality:check": "npm run lint && npm run build:web"
   },
   "repository": {
     "type": "git",
