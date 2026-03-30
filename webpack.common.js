@@ -31,6 +31,7 @@ module.exports = {
           from: 'resources/assets/**/*.+(json|png|mp3|wav)',
         },
         { from: 'src/en/manifest.json', to: 'en/manifest.json' },
+        { from: 'src/es-ar/manifest.json', to: 'es-ar/manifest.json' },
         { from: 'src/ko/manifest.json', to: 'ko/manifest.json' },
         { from: 'src/zh/manifest.json', to: 'zh/manifest.json' },
         { from: 'src/resources/style.css', to: 'resources/style.css' },
@@ -69,6 +70,21 @@ module.exports = {
       },
     }),
     new HtmlWebpackPlugin({
+      template: 'src/es-ar/index.html',
+      filename: 'es-ar/index.html',
+      chunks: [
+        'runtime',
+        'main',
+        'dark_color_scheme',
+        'is_embedded_in_other_website',
+      ],
+      chunksSortMode: 'manual',
+      minify: {
+        collapseWhitespace: true,
+        removeComments: true,
+      },
+    }),
+    new HtmlWebpackPlugin({
       template: 'src/zh/index.html',
       filename: 'zh/index.html',
       chunks: [
@@ -96,6 +112,16 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'src/ko/update-history/index.html',
       filename: 'ko/update-history/index.html',
+      chunks: ['dark_color_scheme'],
+      chunksSortMode: 'manual',
+      minify: {
+        collapseWhitespace: true,
+        removeComments: true,
+      },
+    }),
+    new HtmlWebpackPlugin({
+      template: 'src/es-ar/update-history/index.html',
+      filename: 'es-ar/update-history/index.html',
       chunks: ['dark_color_scheme'],
       chunksSortMode: 'manual',
       minify: {
