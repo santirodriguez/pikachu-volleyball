@@ -48,6 +48,23 @@ npm run build:desktop:linux
 
 The Linux packaging target is restricted to AppImage only.
 
+## Quality-check baseline
+
+This fork now includes a small, reproducible quality-check baseline that matches the current web-first project and Linux/AppImage flow.
+
+Run this command after installing dependencies:
+
+```bash
+npm run quality:check
+```
+
+What it does:
+
+- `npm run lint`: runs ESLint on the web game JavaScript, webpack config files, and Electron entry file.
+- `npm run build:web`: verifies that the production web bundle still builds correctly.
+
+For convenience, `npm test` now runs the same baseline check.
+
 ## Game structure
 
 - Physics Engine: src/resources/js/physics.js
