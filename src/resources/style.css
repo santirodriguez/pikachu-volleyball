@@ -178,6 +178,21 @@ a:active {
   margin-left: 5px;
   margin-right: 5px;
 }
+.btn:focus-visible,
+button.btn-in-box:focus-visible,
+button.update:focus-visible,
+a:focus-visible,
+input.toggle-switch:focus-visible + label {
+  outline: 3px solid #52aaff;
+  outline-offset: 2px;
+}
+.btn:focus:not(:focus-visible),
+button.btn-in-box:focus:not(:focus-visible),
+button.update:focus:not(:focus-visible),
+a:focus:not(:focus-visible),
+input.toggle-switch:focus:not(:focus-visible) + label {
+  outline: none;
+}
 #game-dropdown-btn {
   margin-left: 0;
 }

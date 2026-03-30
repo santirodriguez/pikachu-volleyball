@@ -60,6 +60,8 @@ const pauseResumeManager = {
  * @param {Ticker} ticker
  */
 export function setUpUI(pikaVolley, ticker) {
+  setUpAccessibilityAttributes();
+
   /**
    * Apply options
    * @param {Options} options
@@ -312,7 +314,7 @@ function setUpBtns(pikaVolley, applyAndSaveOptions) {
       return;
     }
     if (pikaVolley.isPracticeMode === true) {
-      noticeBox2.classList.remove('hidden');
+      showOverlay(noticeBox2, noticeOKBtn2);
       // @ts-ignore
       gameDropdownBtn.disabled = true;
       // @ts-ignore
@@ -324,7 +326,7 @@ function setUpBtns(pikaVolley, applyAndSaveOptions) {
     }
     if (isWinningScoreAlreadyReached(5)) {
       winningScoreInNoticeBox1.textContent = '5';
-      noticeBox1.classList.remove('hidden');
+      showOverlay(noticeBox1, noticeOKBtn1);
       // @ts-ignore
       gameDropdownBtn.disabled = true;
       // @ts-ignore
@@ -341,7 +343,7 @@ function setUpBtns(pikaVolley, applyAndSaveOptions) {
       return;
     }
     if (pikaVolley.isPracticeMode === true) {
-      noticeBox2.classList.remove('hidden');
+      showOverlay(noticeBox2, noticeOKBtn2);
       // @ts-ignore
       gameDropdownBtn.disabled = true;
       // @ts-ignore
@@ -353,7 +355,7 @@ function setUpBtns(pikaVolley, applyAndSaveOptions) {
     }
     if (isWinningScoreAlreadyReached(10)) {
       winningScoreInNoticeBox1.textContent = '10';
-      noticeBox1.classList.remove('hidden');
+      showOverlay(noticeBox1, noticeOKBtn1);
       // @ts-ignore
       gameDropdownBtn.disabled = true;
       // @ts-ignore
@@ -370,7 +372,7 @@ function setUpBtns(pikaVolley, applyAndSaveOptions) {
       return;
     }
     if (pikaVolley.isPracticeMode === true) {
-      noticeBox2.classList.remove('hidden');
+      showOverlay(noticeBox2, noticeOKBtn2);
       // @ts-ignore
       gameDropdownBtn.disabled = true;
       // @ts-ignore
@@ -382,7 +384,7 @@ function setUpBtns(pikaVolley, applyAndSaveOptions) {
     }
     if (isWinningScoreAlreadyReached(15)) {
       winningScoreInNoticeBox1.textContent = '15';
-      noticeBox1.classList.remove('hidden');
+      showOverlay(noticeBox1, noticeOKBtn1);
       // @ts-ignore
       gameDropdownBtn.disabled = true;
       // @ts-ignore
@@ -396,7 +398,7 @@ function setUpBtns(pikaVolley, applyAndSaveOptions) {
   });
   noticeOKBtn1.addEventListener('click', () => {
     if (!noticeBox1.classList.contains('hidden')) {
-      noticeBox1.classList.add('hidden');
+      hideOverlay(noticeBox1);
       // @ts-ignore
       gameDropdownBtn.disabled = false;
       // @ts-ignore
@@ -408,7 +410,7 @@ function setUpBtns(pikaVolley, applyAndSaveOptions) {
   });
   noticeOKBtn2.addEventListener('click', () => {
     if (!noticeBox2.classList.contains('hidden')) {
-      noticeBox2.classList.add('hidden');
+      hideOverlay(noticeBox2);
       // @ts-ignore
       gameDropdownBtn.disabled = false;
       // @ts-ignore
@@ -436,14 +438,14 @@ function setUpBtns(pikaVolley, applyAndSaveOptions) {
   const closeAboutBtn = document.getElementById('close-about-btn');
   aboutBtn.addEventListener('click', () => {
     if (aboutBox.classList.contains('hidden')) {
-      aboutBox.classList.remove('hidden');
+      showOverlay(aboutBox, closeAboutBtn);
       // @ts-ignore
       gameDropdownBtn.disabled = true;
       // @ts-ignore
       optionsDropdownBtn.disabled = true;
       pauseResumeManager.pause(pikaVolley, PauseResumePrecedence.messageBox);
     } else {
-      aboutBox.classList.add('hidden');
+      hideOverlay(aboutBox, aboutBtn);
       // @ts-ignore
       gameDropdownBtn.disabled = false;
       // @ts-ignore
@@ -453,7 +455,7 @@ function setUpBtns(pikaVolley, applyAndSaveOptions) {
   });
   closeAboutBtn.addEventListener('click', () => {
     if (!aboutBox.classList.contains('hidden')) {
-      aboutBox.classList.add('hidden');
+      hideOverlay(aboutBox, aboutBtn);
       // @ts-ignore
       gameDropdownBtn.disabled = false;
       // @ts-ignore
@@ -585,25 +587,40 @@ function setSelectedOptionsBtn(options) {
  * @param {PikachuVolleyball} pikaVolley
  */
 function setUpToShowDropdownsAndSubmenus(pikaVolley) {
+  const gameDropdownBtn = document.getElementById('game-dropdown-btn');
+  const optionsDropdownBtn = document.getElementById('options-dropdown-btn');
+
   // hide dropdowns and submenus if the user clicks outside of these
   window.addEventListener('click', (event) => {
     // @ts-ignore
     if (!event.target.matches('.dropdown-btn, .submenu-btn')) {
       hideSubmenus();
       hideDropdownsExcept('');
+      updateDropdownAccessibilityState();
       pauseResumeManager.resume(pikaVolley, PauseResumePrecedence.dropdown);
     }
   });
 
   // set up to show dropdowns
-  document.getElementById('game-dropdown-btn').addEventListener('click', () => {
+  gameDropdownBtn.addEventListener('click', () => {
     toggleDropdown('game-dropdown', pikaVolley);
   });
-  document
-    .getElementById('options-dropdown-btn')
-    .addEventListener('click', () => {
-      toggleDropdown('options-dropdown', pikaVolley);
-    });
+  optionsDropdownBtn.addEventListener('click', () => {
+    toggleDropdown('options-dropdown', pikaVolley);
+  });
+
+  gameDropdownBtn.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      toggleDropdownAndFocusFirstItem('game-dropdown', pikaVolley);
+    }
+  });
+  optionsDropdownBtn.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      toggleDropdownAndFocusFirstItem('options-dropdown', pikaVolley);
+    }
+  });
 
   // set up to show submenus on mouseover event
   document
@@ -668,6 +685,43 @@ function setUpToShowDropdownsAndSubmenus(pikaVolley) {
     .addEventListener('click', () => {
       hideSubmenus();
     });
+
+  document.addEventListener('focusin', (event) => {
+    if (!(event.target instanceof HTMLElement)) {
+      return;
+    }
+    if (event.target.classList.contains('submenu-btn')) {
+      const submenuID = event.target.getAttribute('aria-controls');
+      if (submenuID) {
+        showSubmenu(event.target.id, submenuID);
+      }
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    const activeElement = document.activeElement;
+    if (event.key === 'Escape' && hasOpenDropdown()) {
+      hideSubmenus();
+      hideDropdownsExcept('');
+      updateDropdownAccessibilityState();
+      pauseResumeManager.resume(pikaVolley, PauseResumePrecedence.dropdown);
+      if (activeElement instanceof HTMLElement) {
+        activeElement.blur();
+      }
+    }
+    if (
+      activeElement instanceof HTMLElement &&
+      activeElement.classList.contains('submenu-btn') &&
+      (event.key === 'ArrowRight' || event.key === 'Enter' || event.key === ' ')
+    ) {
+      const submenuID = activeElement.getAttribute('aria-controls');
+      if (submenuID) {
+        event.preventDefault();
+        showSubmenu(activeElement.id, submenuID);
+        focusFirstElementInContainer(submenuID);
+      }
+    }
+  });
 }
 
 /**
@@ -679,10 +733,25 @@ function toggleDropdown(dropdownID, pikaVolley) {
   hideSubmenus();
   hideDropdownsExcept(dropdownID);
   const willShow = document.getElementById(dropdownID).classList.toggle('show');
+  updateDropdownAccessibilityState();
   if (willShow) {
     pauseResumeManager.pause(pikaVolley, PauseResumePrecedence.dropdown);
   } else {
     pauseResumeManager.resume(pikaVolley, PauseResumePrecedence.dropdown);
+  }
+}
+
+/**
+ * Toggle dropdown and move focus to first item when opening.
+ * @param {string} dropdownID
+ * @param {PikachuVolleyball} pikaVolley
+ */
+function toggleDropdownAndFocusFirstItem(dropdownID, pikaVolley) {
+  const dropdown = document.getElementById(dropdownID);
+  const wasOpen = dropdown.classList.contains('show');
+  toggleDropdown(dropdownID, pikaVolley);
+  if (!wasOpen) {
+    focusFirstElementInContainer(dropdownID);
   }
 }
 
@@ -695,6 +764,7 @@ function showSubmenu(submenuBtnID, subMenuID) {
   hideSubmenus();
   document.getElementById(submenuBtnID).classList.add('open');
   document.getElementById(subMenuID).classList.add('show');
+  updateDropdownAccessibilityState();
 }
 
 /**
@@ -708,6 +778,7 @@ function hideDropdownsExcept(dropdownID) {
       dropdowns[i].classList.remove('show');
     }
   }
+  updateDropdownAccessibilityState();
 }
 
 /**
@@ -722,4 +793,128 @@ function hideSubmenus() {
   for (let i = 0; i < submenuBtns.length; i++) {
     submenuBtns[i].classList.remove('open');
   }
+  updateDropdownAccessibilityState();
+}
+
+/**
+ * Set ARIA attributes for menu and overlay elements.
+ */
+function setUpAccessibilityAttributes() {
+  const menuBar = document.getElementById('menu-bar');
+  menuBar.setAttribute('role', 'navigation');
+  menuBar.setAttribute('aria-label', 'Game menu');
+
+  const dropdownBtnIDs = ['game-dropdown-btn', 'options-dropdown-btn'];
+  for (const dropdownBtnID of dropdownBtnIDs) {
+    const dropdownBtn = document.getElementById(dropdownBtnID);
+    const controlledDropdownID =
+      dropdownBtnID === 'game-dropdown-btn' ? 'game-dropdown' : 'options-dropdown';
+    dropdownBtn.setAttribute('aria-haspopup', 'menu');
+    dropdownBtn.setAttribute('aria-controls', controlledDropdownID);
+    dropdownBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  const dropdowns = document.getElementsByClassName('dropdown');
+  for (let i = 0; i < dropdowns.length; i++) {
+    dropdowns[i].setAttribute('role', 'menu');
+    dropdowns[i].setAttribute('aria-hidden', 'true');
+  }
+
+  const submenuBtns = document.getElementsByClassName('submenu-btn');
+  for (let i = 0; i < submenuBtns.length; i++) {
+    const submenuBtn = submenuBtns[i];
+    submenuBtn.setAttribute('aria-haspopup', 'menu');
+    submenuBtn.setAttribute(
+      'aria-controls',
+      submenuBtn.id.replace('-btn', '')
+    );
+    submenuBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  const submenus = document.getElementsByClassName('submenu');
+  for (let i = 0; i < submenus.length; i++) {
+    submenus[i].setAttribute('role', 'menu');
+    submenus[i].setAttribute('aria-hidden', 'true');
+  }
+
+  const aboutBox = document.getElementById('about-box');
+  aboutBox.setAttribute('role', 'dialog');
+  aboutBox.setAttribute('aria-modal', 'true');
+  aboutBox.setAttribute('aria-hidden', 'false');
+
+  const noticeBoxIDs = ['notice-box-1', 'notice-box-2'];
+  for (const noticeBoxID of noticeBoxIDs) {
+    const noticeBox = document.getElementById(noticeBoxID);
+    noticeBox.setAttribute('role', 'alertdialog');
+    noticeBox.setAttribute('aria-modal', 'true');
+    noticeBox.setAttribute('aria-hidden', 'true');
+  }
+}
+
+/**
+ * Keep dropdown and submenu ARIA states in sync with visibility.
+ */
+function updateDropdownAccessibilityState() {
+  const dropdownBtnIDs = ['game-dropdown-btn', 'options-dropdown-btn'];
+  for (const dropdownBtnID of dropdownBtnIDs) {
+    const dropdownBtn = document.getElementById(dropdownBtnID);
+    const dropdownID = dropdownBtn.getAttribute('aria-controls');
+    if (!dropdownID) {
+      continue;
+    }
+    const isOpen = document.getElementById(dropdownID).classList.contains('show');
+    dropdownBtn.setAttribute('aria-expanded', String(isOpen));
+    document.getElementById(dropdownID).setAttribute('aria-hidden', String(!isOpen));
+  }
+
+  const submenuBtns = document.getElementsByClassName('submenu-btn');
+  for (let i = 0; i < submenuBtns.length; i++) {
+    const submenuBtn = submenuBtns[i];
+    const submenuID = submenuBtn.getAttribute('aria-controls');
+    if (!submenuID) {
+      continue;
+    }
+    const isOpen = document.getElementById(submenuID).classList.contains('show');
+    submenuBtn.setAttribute('aria-expanded', String(isOpen));
+    document.getElementById(submenuID).setAttribute('aria-hidden', String(!isOpen));
+  }
+}
+
+/**
+ * @param {HTMLElement} overlay
+ * @param {HTMLElement} focusTarget
+ */
+function showOverlay(overlay, focusTarget) {
+  overlay.classList.remove('hidden');
+  overlay.setAttribute('aria-hidden', 'false');
+  focusTarget.focus();
+}
+
+/**
+ * @param {HTMLElement} overlay
+ * @param {HTMLElement} [focusTarget]
+ */
+function hideOverlay(overlay, focusTarget) {
+  overlay.classList.add('hidden');
+  overlay.setAttribute('aria-hidden', 'true');
+  if (focusTarget) {
+    focusTarget.focus();
+  }
+}
+
+/**
+ * @param {string} containerID
+ */
+function focusFirstElementInContainer(containerID) {
+  const firstElement = document.querySelector(`#${containerID} button`);
+  if (firstElement instanceof HTMLElement) {
+    firstElement.focus();
+  }
+}
+
+/**
+ * @returns {boolean}
+ */
+function hasOpenDropdown() {
+  return document.querySelector('.dropdown.show') !== null;
 }
