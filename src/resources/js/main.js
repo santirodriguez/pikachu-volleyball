@@ -104,43 +104,17 @@ function setUpInitialUI() {
   });
 
   const aboutBox = document.getElementById('about-box');
-  const aboutBtn = document.getElementById('about-btn');
-  const closeAboutBtn = document.getElementById('close-about-btn');
   const gameDropdownBtn = document.getElementById('game-dropdown-btn');
   const optionsDropdownBtn = document.getElementById('options-dropdown-btn');
   // @ts-ignore
   gameDropdownBtn.disabled = true;
   // @ts-ignore
   optionsDropdownBtn.disabled = true;
-  const closeAboutBox = () => {
-    if (!aboutBox.classList.contains('hidden')) {
-      aboutBox.classList.add('hidden');
-      // @ts-ignore
-      aboutBtn.disabled = true;
-    }
-    aboutBtn.getElementsByClassName('text-play')[0].classList.add('hidden');
-    aboutBtn.getElementsByClassName('text-about')[0].classList.remove('hidden');
-    aboutBtn.classList.remove('glow');
-    closeAboutBtn
-      .getElementsByClassName('text-play')[0]
-      .classList.add('hidden');
-    closeAboutBtn
-      .getElementsByClassName('text-close')[0]
-      .classList.remove('hidden');
-    closeAboutBtn.classList.remove('glow');
-
-    loader.load(setup); // setup is called after loader finishes loading
-    loadingBox.classList.remove('hidden');
-    aboutBtn.removeEventListener('click', closeAboutBox);
-    closeAboutBtn.removeEventListener('click', closeAboutBox);
-  };
-  aboutBtn.addEventListener('click', closeAboutBox);
-  closeAboutBtn.addEventListener('click', closeAboutBox);
-
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('desktop') === '1') {
-    closeAboutBox();
+  if (!aboutBox.classList.contains('hidden')) {
+    aboutBox.classList.add('hidden');
   }
+  loader.load(setup); // setup is called after loader finishes loading
+  loadingBox.classList.remove('hidden');
 }
 
 /**

@@ -436,31 +436,39 @@ function setUpBtns(pikaVolley, applyAndSaveOptions) {
 
   const aboutBox = document.getElementById('about-box');
   const closeAboutBtn = document.getElementById('close-about-btn');
+  const openAboutBox = () => {
+    showOverlay(aboutBox, closeAboutBtn);
+    // @ts-ignore
+    gameDropdownBtn.disabled = true;
+    // @ts-ignore
+    optionsDropdownBtn.disabled = true;
+    pauseResumeManager.pause(pikaVolley, PauseResumePrecedence.messageBox);
+  };
+  const closeAboutBox = () => {
+    hideOverlay(aboutBox, aboutBtn);
+    // @ts-ignore
+    gameDropdownBtn.disabled = false;
+    // @ts-ignore
+    optionsDropdownBtn.disabled = false;
+    pauseResumeManager.resume(pikaVolley, PauseResumePrecedence.messageBox);
+  };
   aboutBtn.addEventListener('click', () => {
     if (aboutBox.classList.contains('hidden')) {
-      showOverlay(aboutBox, closeAboutBtn);
-      // @ts-ignore
-      gameDropdownBtn.disabled = true;
-      // @ts-ignore
-      optionsDropdownBtn.disabled = true;
-      pauseResumeManager.pause(pikaVolley, PauseResumePrecedence.messageBox);
+      openAboutBox();
     } else {
-      hideOverlay(aboutBox, aboutBtn);
-      // @ts-ignore
-      gameDropdownBtn.disabled = false;
-      // @ts-ignore
-      optionsDropdownBtn.disabled = false;
-      pauseResumeManager.resume(pikaVolley, PauseResumePrecedence.messageBox);
+      closeAboutBox();
     }
   });
   closeAboutBtn.addEventListener('click', () => {
     if (!aboutBox.classList.contains('hidden')) {
-      hideOverlay(aboutBox, aboutBtn);
-      // @ts-ignore
-      gameDropdownBtn.disabled = false;
-      // @ts-ignore
-      optionsDropdownBtn.disabled = false;
-      pauseResumeManager.resume(pikaVolley, PauseResumePrecedence.messageBox);
+      closeAboutBox();
+    }
+  });
+  window.addEventListener('pv-desktop-open-about', () => {
+    if (aboutBox.classList.contains('hidden')) {
+      openAboutBox();
+    } else {
+      closeAboutBtn.focus();
     }
   });
 
