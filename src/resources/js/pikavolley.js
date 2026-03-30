@@ -37,7 +37,7 @@ export class PikachuVolleyball {
     this.view.game.visible = false;
     this.view.fadeInOut.visible = false;
 
-    this.audio = new PikaAudio(resources);
+    this.audio = new PikaAudio();
     this.physics = new PikaPhysics(true, true);
     this.keyboardArray = [
       new PikaKeyboard('KeyD', 'KeyG', 'KeyR', 'KeyV', 'KeyZ', 'KeyF'), // for player1
