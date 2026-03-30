@@ -105,6 +105,12 @@ export class PikachuVolleyball {
 
     /** @type {boolean} true: practice mode on, false: practice mode off */
     this._isPracticeMode = false;
+    /** @type {boolean} */
+    this.ballResetRequested = false;
+    /** @type {string} */
+    this.ballResetKeyCode = 'KeyB';
+    this.ballResetKeyDownListener = this.onBallResetKeyDown.bind(this);
+    window.addEventListener('keydown', this.ballResetKeyDownListener);
 
     /**
      * The game state which is being rendered now
@@ -121,6 +127,9 @@ export class PikachuVolleyball {
   gameLoop() {
     if (this.paused === true) {
       return;
+    }
+    if (this.state !== this.round) {
+      this.ballResetRequested = false;
     }
     if (this.slowMotionFramesLeft > 0) {
       this.slowMotionNumOfSkippedFrames++;
@@ -331,6 +340,12 @@ export class PikachuVolleyball {
    * @type {GameState}
    */
   round() {
+    const ballResetRequested = this.consumeBallResetRequest();
+    if (this._isPracticeMode === true && ballResetRequested === true) {
+      this.resetBallForPractice();
+      return;
+    }
+
     const pressedPowerHit =
       this.keyboardArray[0].powerHit === 1 ||
       this.keyboardArray[1].powerHit === 1;
@@ -472,6 +487,35 @@ export class PikachuVolleyball {
     this.view.game.visible = false;
     this.setQuickRematchHintVisibility(false);
     this.state = this.startOfNewGame;
+  }
+
+  /**
+   * @param {KeyboardEvent} event
+   */
+  onBallResetKeyDown(event) {
+    if (event.code !== this.ballResetKeyCode || event.repeat) {
+      return;
+    }
+    this.ballResetRequested = true;
+    event.preventDefault();
+  }
+
+  /**
+   * @return {boolean}
+   */
+  consumeBallResetRequest() {
+    const wasRequested = this.ballResetRequested;
+    this.ballResetRequested = false;
+    return wasRequested;
+  }
+
+  /**
+   * Reset ball state during practice mode for quick drills.
+   */
+  resetBallForPractice() {
+    this.physics.ball.initializeForNewRound(this.isPlayer2Serve);
+    this.view.game.drawPlayersAndBall(this.physics);
+    this.view.game.drawCloudsAndWave();
   }
 
 
