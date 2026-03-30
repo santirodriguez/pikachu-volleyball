@@ -1,7 +1,8 @@
 const path = require('path');
-const { app, BrowserWindow, Menu } = require('electron');
+const { app, BrowserWindow, Menu, shell } = require('electron');
 
 const APP_NAME = 'Pikachu Volleyball';
+const FORK_SOURCE_URL = 'https://github.com/santirodriguez/pikachu-volleyball';
 const SUPPORTED_LOCALES = ['en', 'ko', 'zh', 'es-ar'];
 
 /** @type {BrowserWindow | null} */
@@ -35,6 +36,19 @@ function openAboutOverlay() {
     "window.dispatchEvent(new CustomEvent('pv-desktop-open-about'));",
     true
   );
+}
+
+function isAllowedExternalUrl(urlString) {
+  return urlString === FORK_SOURCE_URL;
+}
+
+function isLocalAppUrl(urlString) {
+  try {
+    const url = new URL(urlString);
+    return url.protocol === 'file:';
+  } catch {
+    return false;
+  }
 }
 
 function buildAppMenu() {
@@ -164,6 +178,23 @@ function createMainWindow() {
   });
 
   loadLocale('en');
+
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    if (isAllowedExternalUrl(url)) {
+      shell.openExternal(url);
+    }
+    return { action: 'deny' };
+  });
+
+  mainWindow.webContents.on('will-navigate', (event, url) => {
+    if (isLocalAppUrl(url)) {
+      return;
+    }
+    event.preventDefault();
+    if (isAllowedExternalUrl(url)) {
+      shell.openExternal(url);
+    }
+  });
 
   mainWindow.webContents.on('did-finish-load', () => {
     if (!mainWindow || mainWindow.isDestroyed()) {
