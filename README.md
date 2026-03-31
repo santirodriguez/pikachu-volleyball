@@ -1,6 +1,6 @@
-# Pikachu Volleyball
+# Pikachu Volleyball for Linux (AppImage)
 
-✓ English | Español | Korean(한국어)
+✓ English | Español (Argentina) | Korean (한국어) | Chinese (中文)
 
 Pikachu Volleyball (対戦ぴかちゅ～　ﾋﾞｰﾁﾊﾞﾚｰ編) is an old Windows game that was developed by "(C) SACHI SOFT / SAWAYAKAN Programmers" and "(C) Satoshi Takenouchi" in 1997.
 
